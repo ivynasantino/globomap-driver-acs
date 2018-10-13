@@ -196,15 +196,15 @@ class CloudstackService(object):
         return virtual_machines['virtualmachine']
 
     def get_project(self, id):
+		result = dict()
         if id:
             projects = self.cloudstack_client.\
                 listProjects({'id': id, 'listall': 'true'})
             if projects and projects.get('count') == 1:
-                return projects['project'][0]
-            else:
-                return dict()
-        else:
-            return dict()
+                result = projects['project'][0]
+            
+        return result
+         
 
     def list_projects(self):
         projects = self.cloudstack_client.\
