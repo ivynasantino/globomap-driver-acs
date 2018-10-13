@@ -13,6 +13,7 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 """
+
 import unittest
 from unittest.mock import MagicMock
 from unittest.mock import Mock
@@ -29,6 +30,16 @@ from tests.util import open_json
 
 
 class TestCloudstackDriver(unittest.TestCase):
+	
+	UPDATE = 'UPDATE'
+	CREATE = 'CREATE'
+	DELETE = 'DELETE'
+	PATCH = 'PATCH'
+	GLOBO_MAP_PROVIDER = 'globomap'
+	KEY = 'globomap_123'
+	ID = '123'
+	ENV = 'ENV'
+	ELEMENT_TO = 'comp_unit/globomap_123'
 
     def setUp(self):
         self.project = {
@@ -96,27 +107,27 @@ class TestCloudstackDriver(unittest.TestCase):
 
         self.assertEqual(4, len(updates))
 
-        self.assertEqual('DELETE', host_edge_delete['action'])
+        self.assertEqual(DELETE, host_edge_delete['action'])
         self.assertEqual('host_comp_unit', host_edge_delete['collection'])
         self.assertEqual('edges', host_edge_delete['type'])
         self.assertEqual(
             'globomap_3018bdf1-4843-43b3-bdcf-ba1beb63c930', host_edge_delete['key'])
 
-        self.assertEqual('DELETE', process_edge_delete['action'])
+        self.assertEqual(DELETE, process_edge_delete['action'])
         self.assertEqual('custeio_process_comp_unit',
                          process_edge_delete['collection'])
         self.assertEqual('edges', process_edge_delete['type'])
         self.assertEqual(
             'globomap_3018bdf1-4843-43b3-bdcf-ba1beb63c930', process_edge_delete['key'])
 
-        self.assertEqual('DELETE', service_edge_delete['action'])
+        self.assertEqual(DELETE, service_edge_delete['action'])
         self.assertEqual('custeio_business_service_comp_unit',
                          service_edge_delete['collection'])
         self.assertEqual('edges', service_edge_delete['type'])
         self.assertEqual(
             'globomap_3018bdf1-4843-43b3-bdcf-ba1beb63c930', service_edge_delete['key'])
 
-        self.assertEqual('DELETE', client_edge_delete['action'])
+        self.assertEqual(DELETE, client_edge_delete['action'])
         self.assertEqual('custeio_client_comp_unit',
                          client_edge_delete['collection'])
         self.assertEqual('edges', client_edge_delete['type'])
@@ -133,7 +144,7 @@ class TestCloudstackDriver(unittest.TestCase):
         update = self._create_driver()._create_updates(
             open_json('tests/json/vm_upgrade_event.json'))[0]
 
-        self.assertEqual('PATCH', update['action'])
+        self.assertEqual(PATCH, update['action'])
         self.assertEqual('comp_unit', update['collection'])
         self.assertEqual('collections', update['type'])
         self.assertEqual(
@@ -151,7 +162,7 @@ class TestCloudstackDriver(unittest.TestCase):
         update = self._create_driver()._create_updates(
             open_json('tests/json/vm_power_state_event.json'))[0]
 
-        self.assertEqual('PATCH', update['action'])
+        self.assertEqual(PATCH, update['action'])
         self.assertEqual('comp_unit', update['collection'])
         self.assertEqual('collections', update['type'])
         self.assertEqual(
@@ -236,49 +247,49 @@ class TestCloudstackDriver(unittest.TestCase):
         )
 
         def callback(update):
-            if update['action'] == 'PATCH' and update['collection'] == 'comp_unit':
+            if update['action'] == PATCH and update['collection'] == 'comp_unit':
                 self.assertEqual('collections', update['type'])
                 self.assertEqual(
                     'globomap_3018bdf1-4843-43b3-bdcf-ba1beb63c930', update['key'])
-            elif update['action'] == 'UPDATE' and update['collection'] == 'zone':
+            elif update['action'] == UPDATE and update['collection'] == 'zone':
                 self.assertEqual('collections', update['type'])
                 self.assertEqual(
                     'globomap_35ae56ee-273a-46da-8422-fe2b3490c76a', update['key'])
-            elif update['action'] == 'UPDATE' and update['collection'] == 'host_comp_unit':
+            elif update['action'] == UPDATE and update['collection'] == 'host_comp_unit':
                 self.assertEqual('edges', update['type'])
                 self.assertEqual(
                     'globomap_3018bdf1-4843-43b3-bdcf-ba1beb63c930', update['key'])
-            elif update['action'] == 'UPDATE' and update['collection'] == 'zone_host':
+            elif update['action'] == UPDATE and update['collection'] == 'zone_host':
                 self.assertEqual('edges', update['type'])
                 self.assertEqual('globomap_hostname', update['key'])
-            elif update['action'] == 'UPDATE' and update['collection'] == 'zone_region':
+            elif update['action'] == UPDATE and update['collection'] == 'zone_region':
                 self.assertEqual('edges', update['type'])
                 self.assertEqual(
                     'globomap_35ae56ee-273a-46da-8422-fe2b3490c76a', update['key'])
-            elif update['action'] == 'UPDATE' and update['collection'] == 'region':
+            elif update['action'] == UPDATE and update['collection'] == 'region':
                 self.assertEqual('collections', update['type'])
                 self.assertEqual('globomap_ENV', update['key'])
-            elif update['action'] == 'UPDATE' and update['collection'] == 'custeio_process_comp_unit':
+            elif update['action'] == UPDATE and update['collection'] == 'custeio_process_comp_unit':
                 self.assertEqual('edges', update['type'])
                 self.assertEqual(
                     'globomap_3018bdf1-4843-43b3-bdcf-ba1beb63c930', update['key'])
-            elif update['action'] == 'UPDATE' and update['collection'] == 'custeio_business_service_comp_unit':
+            elif update['action'] == UPDATE and update['collection'] == 'custeio_business_service_comp_unit':
                 self.assertEqual('edges', update['type'])
                 self.assertEqual(
                     'globomap_3018bdf1-4843-43b3-bdcf-ba1beb63c930', update['key'])
-            elif update['action'] == 'UPDATE' and update['collection'] == 'custeio_client_comp_unit':
+            elif update['action'] == UPDATE and update['collection'] == 'custeio_client_comp_unit':
                 self.assertEqual('edges', update['type'])
                 self.assertEqual(
                     'globomap_3018bdf1-4843-43b3-bdcf-ba1beb63c930', update['key'])
-            elif update['action'] == 'UPDATE' and update['collection'] == 'custeio_component_comp_unit':
+            elif update['action'] == UPDATE and update['collection'] == 'custeio_component_comp_unit':
                 self.assertEqual('edges', update['type'])
                 self.assertEqual(
                     'globomap_3018bdf1-4843-43b3-bdcf-ba1beb63c930', update['key'])
-            elif update['action'] == 'UPDATE' and update['collection'] == 'custeio_sub_component_comp_unit':
+            elif update['action'] == UPDATE and update['collection'] == 'custeio_sub_component_comp_unit':
                 self.assertEqual('edges', update['type'])
                 self.assertEqual(
                     'globomap_3018bdf1-4843-43b3-bdcf-ba1beb63c930', update['key'])
-            elif update['action'] == 'UPDATE' and update['collection'] == 'custeio_product_comp_unit':
+            elif update['action'] == UPDATE and update['collection'] == 'custeio_product_comp_unit':
                 self.assertEqual('edges', update['type'])
                 self.assertEqual(
                     'globomap_3018bdf1-4843-43b3-bdcf-ba1beb63c930', update['key'])
@@ -302,7 +313,7 @@ class TestCloudstackDriver(unittest.TestCase):
         )
 
         def callback(update):
-            if update['action'] == 'PATCH':
+            if update['action'] == PATCH:
                 self.assertIsNone(
                     update['element']['properties'].get('project'))
 
@@ -422,14 +433,14 @@ class TestCloudstackDriver(unittest.TestCase):
         self.assertEqual(1, len(updates))
         element = updates[0]['element']
 
-        self.assertEqual('UPDATE', updates[0]['action'])
-        self.assertEqual('globomap_123', updates[0]['key'])
+        self.assertEqual(UPDATE, updates[0]['action'])
+        self.assertEqual(KEY, updates[0]['key'])
         self.assertEqual('custeio_process_comp_unit', updates[0]['collection'])
         self.assertEqual(
             'custeio_process/custeio_7a9456320f328700fd7f91dbe1050e27', element['from'])
-        self.assertEqual('comp_unit/globomap_123', element['to'])
-        self.assertEqual('globomap', element['provider'])
-        self.assertEqual('123', element['id'])
+        self.assertEqual(ELEMENT_TO, element['to'])
+        self.assertEqual(GLOBO_MAP_PROVIDER, element['provider'])
+        self.assertEqual(ID, element['id'])
 
     def test_create_client_update(self):
         self._mock_rabbitmq_client()
@@ -440,13 +451,13 @@ class TestCloudstackDriver(unittest.TestCase):
         element = updates[0]['element']
 
         self.assertEqual(1, len(updates))
-        self.assertEqual('UPDATE', updates[0]['action'])
-        self.assertEqual('globomap_123', updates[0]['key'])
+        self.assertEqual(UPDATE, updates[0]['action'])
+        self.assertEqual(KEY, updates[0]['key'])
         self.assertEqual('custeio_client_comp_unit', updates[0]['collection'])
         self.assertEqual('custeio_client/custeio_1', element['from'])
-        self.assertEqual('comp_unit/globomap_123', element['to'])
-        self.assertEqual('globomap', element['provider'])
-        self.assertEqual('123', element['id'])
+        self.assertEqual(ELEMENT_TO, element['to'])
+        self.assertEqual(GLOBO_MAP_PROVIDER, element['provider'])
+        self.assertEqual(ID, element['id'])
 
     def test_create_client_update_given_project_not_found(self):
         self._mock_rabbitmq_client()
@@ -466,15 +477,15 @@ class TestCloudstackDriver(unittest.TestCase):
         element = updates[0]['element']
 
         self.assertEqual(1, len(updates))
-        self.assertEqual('UPDATE', updates[0]['action'])
+        self.assertEqual(UPDATE, updates[0]['action'])
         self.assertEqual(int, type(element['timestamp']))
-        self.assertEqual('globomap_123', updates[0]['key'])
+        self.assertEqual(KEY, updates[0]['key'])
         self.assertEqual('custeio_business_service_comp_unit',
                          updates[0]['collection'])
         self.assertEqual('custeio_business_service/custeio_1', element['from'])
-        self.assertEqual('comp_unit/globomap_123', element['to'])
-        self.assertEqual('globomap', element['provider'])
-        self.assertEqual('123', element['id'])
+        self.assertEqual(ELEMENT_TO, element['to'])
+        self.assertEqual(GLOBO_MAP_PROVIDER, element['provider'])
+        self.assertEqual(ID, element['id'])
 
     def test_create_business_service_update_project_not_found(self):
         self._mock_rabbitmq_client()
@@ -494,15 +505,15 @@ class TestCloudstackDriver(unittest.TestCase):
         element = updates[0]['element']
 
         self.assertEqual(1, len(updates))
-        self.assertEqual('UPDATE', updates[0]['action'])
+        self.assertEqual(UPDATE, updates[0]['action'])
         self.assertEqual(int, type(element['timestamp']))
-        self.assertEqual('globomap_123', updates[0]['key'])
+        self.assertEqual(KEY, updates[0]['key'])
         self.assertEqual('custeio_component_comp_unit',
                          updates[0]['collection'])
         self.assertEqual('custeio_component/custeio_1', element['from'])
-        self.assertEqual('comp_unit/globomap_123', element['to'])
-        self.assertEqual('globomap', element['provider'])
-        self.assertEqual('123', element['id'])
+        self.assertEqual(ELEMENT_TO, element['to'])
+        self.assertEqual(GLOBO_MAP_PROVIDER, element['provider'])
+        self.assertEqual(ID, element['id'])
 
     def test_create_component_update_project_not_found(self):
         self._mock_rabbitmq_client()
@@ -522,15 +533,15 @@ class TestCloudstackDriver(unittest.TestCase):
         element = updates[0]['element']
 
         self.assertEqual(1, len(updates))
-        self.assertEqual('UPDATE', updates[0]['action'])
+        self.assertEqual(UPDATE, updates[0]['action'])
         self.assertEqual(int, type(element['timestamp']))
-        self.assertEqual('globomap_123', updates[0]['key'])
+        self.assertEqual(KEY, updates[0]['key'])
         self.assertEqual('custeio_sub_component_comp_unit',
                          updates[0]['collection'])
         self.assertEqual('custeio_sub_component/custeio_1', element['from'])
-        self.assertEqual('comp_unit/globomap_123', element['to'])
-        self.assertEqual('globomap', element['provider'])
-        self.assertEqual('123', element['id'])
+        self.assertEqual(ELEMENT_TO, element['to'])
+        self.assertEqual(GLOBO_MAP_PROVIDER, element['provider'])
+        self.assertEqual(ID, element['id'])
 
     def test_create_sub_component_update_project_not_found(self):
         self._mock_rabbitmq_client()
@@ -550,14 +561,14 @@ class TestCloudstackDriver(unittest.TestCase):
         element = updates[0]['element']
 
         self.assertEqual(1, len(updates))
-        self.assertEqual('UPDATE', updates[0]['action'])
+        self.assertEqual(UPDATE, updates[0]['action'])
         self.assertEqual(int, type(element['timestamp']))
-        self.assertEqual('globomap_123', updates[0]['key'])
+        self.assertEqual(KEY, updates[0]['key'])
         self.assertEqual('custeio_product_comp_unit', updates[0]['collection'])
         self.assertEqual('custeio_product/custeio_1', element['from'])
-        self.assertEqual('comp_unit/globomap_123', element['to'])
-        self.assertEqual('globomap', element['provider'])
-        self.assertEqual('123', element['id'])
+        self.assertEqual(ELEMENT_TO, element['to'])
+        self.assertEqual(GLOBO_MAP_PROVIDER, element['provider'])
+        self.assertEqual(ID, element['id'])
 
     def test_create_product_update_project_not_found(self):
         self._mock_rabbitmq_client()
@@ -577,13 +588,13 @@ class TestCloudstackDriver(unittest.TestCase):
         element = updates[0]['element']
 
         self.assertEqual(1, len(updates))
-        self.assertEqual('UPDATE', updates[0]['action'])
-        self.assertEqual('globomap_123', updates[0]['key'])
+        self.assertEqual(UPDATE, updates[0]['action'])
+        self.assertEqual(KEY, updates[0]['key'])
         self.assertEqual('host_comp_unit', updates[0]['collection'])
         self.assertEqual('comp_unit/globomap_hostname', element['from'])
-        self.assertEqual('comp_unit/globomap_123', element['to'])
-        self.assertEqual('globomap', element['provider'])
-        self.assertEqual('123', element['id'])
+        self.assertEqual(ELEMENT_TO, element['to'])
+        self.assertEqual(GLOBO_MAP_PROVIDER, element['provider'])
+        self.assertEqual(ID, element['id'])
 
     def test_create_host_update_given_vm_with_no_host(self):
         self._mock_rabbitmq_client()
@@ -593,8 +604,8 @@ class TestCloudstackDriver(unittest.TestCase):
         handler.create_host_update(updates, {'id': '123'}, '')
 
         self.assertEqual(1, len(updates))
-        self.assertEqual('DELETE', updates[0]['action'])
-        self.assertEqual('globomap_123', updates[0]['key'])
+        self.assertEqual(DELETE, updates[0]['action'])
+        self.assertEqual(KEY, updates[0]['key'])
         self.assertEqual('host_comp_unit', updates[0]['collection'])
 
     def test_create_zone_update(self):
@@ -611,7 +622,7 @@ class TestCloudstackDriver(unittest.TestCase):
             updates, {'id': '123', 'properties': {'zone': 'zone_a'}}, 'hostname')
 
         self.assertEqual(3, len(updates))
-        self.assertEqual('UPDATE', updates[0]['action'])
+        self.assertEqual(UPDATE, updates[0]['action'])
         self.assertEqual(
             'globomap_35ae56ee-273a-46da-8422-fe2b3490c76a', updates[0]['key'])
         self.assertEqual('zone', updates[0]['collection'])
@@ -624,13 +635,13 @@ class TestCloudstackDriver(unittest.TestCase):
             'Enabled', updates[0]['element']['properties']['state'])
 
         edge = updates[1]['element']
-        self.assertEqual('UPDATE', updates[1]['action'])
+        self.assertEqual(UPDATE, updates[1]['action'])
         self.assertEqual('globomap_hostname', updates[1]['key'])
         self.assertEqual('zone_host', updates[1]['collection'])
         self.assertEqual(
             'zone/globomap_35ae56ee-273a-46da-8422-fe2b3490c76a', edge['from'])
         self.assertEqual('comp_unit/globomap_hostname', edge['to'])
-        self.assertEqual('globomap', edge['provider'])
+        self.assertEqual(GLOBO_MAP_PROVIDER, edge['provider'])
         self.assertEqual('hostname', edge['id'])
 
         edge = updates[2]['element']
@@ -641,7 +652,7 @@ class TestCloudstackDriver(unittest.TestCase):
         self.assertEqual(
             'zone/globomap_35ae56ee-273a-46da-8422-fe2b3490c76a', edge['from'])
         self.assertEqual('region/globomap_ENV', edge['to'])
-        self.assertEqual('globomap', edge['provider'])
+        self.assertEqual(GLOBO_MAP_PROVIDER, edge['provider'])
         self.assertEqual('35ae56ee-273a-46da-8422-fe2b3490c76a', edge['id'])
 
     def test_create_region_update(self):
@@ -657,7 +668,7 @@ class TestCloudstackDriver(unittest.TestCase):
         handler.create_region_update(updates)
 
         self.assertEqual(1, len(updates))
-        self.assertEqual('UPDATE', updates[0]['action'])
+        self.assertEqual(UPDATE, updates[0]['action'])
         self.assertEqual('globomap_ENV', updates[0]['key'])
         self.assertEqual('region', updates[0]['collection'])
         self.assertEqual('ENV', updates[0]['element']['id'])
@@ -675,13 +686,13 @@ class TestCloudstackDriver(unittest.TestCase):
         )
 
         element = edge['element']
-        self.assertEqual('UPDATE', edge['action'])
+        self.assertEqual(UPDATE, edge['action'])
         self.assertEqual('globomap_7a9456320', edge['key'])
         self.assertEqual('custeio_business_service_comp_unit',
                          edge['collection'])
         self.assertEqual('edges', edge['type'])
         self.assertEqual('7a9456320', element['id'])
-        self.assertEqual('globomap', element['provider'])
+        self.assertEqual(GLOBO_MAP_PROVIDER, element['provider'])
         self.assertIsNotNone(element['timestamp'])
         self.assertEqual(int, type(element['timestamp']))
         self.assertEqual('business_service/custeio_%s' %
@@ -696,7 +707,7 @@ class TestCloudstackDriver(unittest.TestCase):
             'CREATE', 'comp_unit', 'collections', {}, 'KEY'
         )
 
-        self.assertEqual('CREATE', update['action'])
+        self.assertEqual(CREATE, update['action'])
         self.assertEqual('comp_unit', update['collection'])
         self.assertEqual('collections', update['type'])
         self.assertEqual({}, update['element'])
@@ -730,19 +741,19 @@ class TestCloudstackDriver(unittest.TestCase):
         return csv_reader_mock
 
     def _create_driver(self):
-        return Cloudstack({'env': 'ENV'})
+        return Cloudstack({'env': ENV})
 
     def _create_vm_update_handler(self, cloudstack_service=None):
-        return VirtualMachineUpdateHandler('ENV', cloudstack_service)
+        return VirtualMachineUpdateHandler(ENV, cloudstack_service)
 
     def _create_dictionary_update_handler(self, cloudstack_service=None):
-        return DictionaryEntitiesUpdateHandler('ENV', cloudstack_service, self.project)
+        return DictionaryEntitiesUpdateHandler(ENV, cloudstack_service, self.project)
 
     def _create_host_update_handler(self, cloudstack_service=None):
-        return HostUpdateHandler('ENV', cloudstack_service)
+        return HostUpdateHandler(ENV, cloudstack_service)
 
     def _create_zone_update_handler(self, cloudstack_service=None):
-        return ZoneUpdateHandler('ENV', cloudstack_service)
+        return ZoneUpdateHandler(ENV, cloudstack_service)
 
     def _create_region_update_handler(self, cloudstack_service=None):
-        return RegionUpdateHandler('ENV', cloudstack_service)
+        return RegionUpdateHandler(ENV, cloudstack_service)

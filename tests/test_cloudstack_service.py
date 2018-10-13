@@ -13,6 +13,7 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 """
+
 import unittest
 from unittest.mock import Mock
 from globomap_driver_acs.cloudstack import CloudstackService
@@ -21,34 +22,37 @@ from tests.util import open_json
 
 class TestCloudstackService(unittest.TestCase):
 
+	TEST_JSON = 'tests/json/'
+	UNIQUE_ID = 'unique_id'
+
     def test_get_virtual_machine(self):
-        mock = self._mock_list_vm(open_json('tests/json/vm.json'))
+        mock = self._mock_list_vm(open_json(TEST_JSON + 'vm.json'))
         service = CloudstackService(mock)
-        vm = service.get_virtual_machine('unique_id')
+        vm = service.get_virtual_machine(UNIQUE_ID)
 
         self.assertIsNotNone(vm)
         self.assertTrue(mock.listVirtualMachines.called)
 
     def test_get_virtual_machine_given_vm_not_found(self):
-        mock = self._mock_list_vm(open_json('tests/json/empty_vm.json'))
+        mock = self._mock_list_vm(open_json(TEST_JSON + 'empty_vm.json'))
         service = CloudstackService(mock)
-        vm = service.get_virtual_machine('unique_id')
+        vm = service.get_virtual_machine(UNIQUE_ID)
 
         self.assertIsNone(vm)
         self.assertTrue(mock.listVirtualMachines.called)
 
     def test_get_project(self):
-        mock = self._mock_list_projects(open_json('tests/json/project.json'))
+        mock = self._mock_list_projects(open_json(TEST_JSON + 'project.json'))
         service = CloudstackService(mock)
-        project = service.get_project('unique_id')
+        project = service.get_project(UNIQUE_ID)
 
         self.assertIsNotNone(project)
         self.assertTrue(mock.listProjects.called)
 
     def test_get_project_given_project_not_found(self):
-        mock = self._mock_list_projects(open_json('tests/json/empty_project.json'))
+        mock = self._mock_list_projects(open_json(TEST_JSON + 'empty_project.json'))
         service = CloudstackService(mock)
-        project = service.get_project('unique_id')
+        project = service.get_project(UNIQUE_ID)
 
         self.assertEqual(dict(), project)
         self.assertTrue(mock.listProjects.called)
