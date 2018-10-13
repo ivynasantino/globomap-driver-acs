@@ -39,6 +39,7 @@ GLOBOMAP_LOADER_API_PASSWORD = os.getenv('GLOBOMAP_LOADER_API_PASSWORD')
 
 def get_setting(env, key, default=None):
     value = os.getenv('ACS_%s_%s' % (env, key))
+    result = value
     if not value and default:
-        return default
-    return value
+        result = default
+    return result
