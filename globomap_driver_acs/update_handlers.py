@@ -183,13 +183,13 @@ class VirtualMachineUpdateHandler(GloboMapUpdateHandler):
 
     @staticmethod
     def get_vm_id(msg):
+		msg_get = msg.get('id')
         if msg.get('event') == EventTypeHandler.VM_UPGRADE_EVENT:
             if msg.get('entityuuid'):
-                return msg.get('entityuuid')
+                msg_get = msg.get('entityuuid')
             elif msg.get('details') and msg.get('details').find('Vm Id: ') == 0:
-                return msg.get('details')[7:]
-        else:
-            return msg.get('id')
+                msg_get = msg.get('details')[7:]
+       return msg_get
 
     @staticmethod
     def _parse_date(event_time):
